@@ -1,0 +1,40 @@
+#!/bin/bash
+
+function retrieve_file {
+  local -r target_path="$1"
+  local -r resourcetier="$2"
+
+  echo "Aquiring data... file_deadline_cert to $target_path"
+  response=$(aws secretsmanager get-secret-value \
+    --secret-id "/firehawk/resourcetier/$resourcetier/file_deadline_cert")
+
+  echo "mkdir: $(dirname $target_path)"
+  mkdir -p "$(dirname $target_path)" # ensure the directory exists
+  echo "Check file path is writable: $target_path"
+  if test -f "$target_path"; then
+    echo "File exists: ensuring it is writeable"
+    chmod u+w "$target_path"
+    touch "$target_path"
+  else
+    echo "Ensuring path is writeable"
+    touch "$target_path"
+    chmod u+w "$target_path"
+  fi
+  if [[ -f "$target_path" ]]; then
+    chmod u+w "$target_path"
+  else
+    echo "Error: path does not exist, var may not be a file: $target_path "
+  fi
+
+  echo "Write file content: single operation"
+  file_content=$(echo "$response" | jq -r '.file' | base64 --decode)
+  echo "$file_content" >"$target_path"
+
+  if [[ ! -f "$target_path" ]] || [[ -z "$(cat $target_path)" ]]; then
+    echo "Error: no file or empty result at $target_path"
+    exit 1
+  fi
+  echo "retrieval done."
+}
+
+retrieve_file "$@"
