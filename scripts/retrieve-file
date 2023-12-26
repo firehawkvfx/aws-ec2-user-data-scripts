@@ -5,8 +5,10 @@ function retrieve_file {
   local -r resourcetier="$2"
 
   echo "Aquiring data... file_deadline_client_cert to $target_path"
+  set -x
   response=$(aws secretsmanager get-secret-value \
     --secret-id "/firehawk/resourcetier/$resourcetier/file_deadline_client_cert")
+  set +x
 
   echo "mkdir: $(dirname $target_path)"
   mkdir -p "$(dirname $target_path)" # ensure the directory exists
