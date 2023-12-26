@@ -27,7 +27,7 @@ function retrieve_file {
   fi
 
   echo "Write file content: single operation"
-  file_content=$(echo "$response" | jq -r '.file' | base64 --decode)
+  file_content=$(echo "$response" | jq -r .'SecretString' | jq -r .'file' | base64 --decode)
   echo "$file_content" >"$target_path"
 
   if [[ ! -f "$target_path" ]] || [[ -z "$(cat $target_path)" ]]; then
