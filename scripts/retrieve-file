@@ -10,6 +10,11 @@ function retrieve_file {
     --secret-id "/firehawk/resourcetier/$resourcetier/file_deadline_client_cert")
   set +x
 
+  if [[ -z "$response" ]]; then
+    echo "Error: no response from AWS Secrets Manager"
+    exit 1
+  fi
+
   echo "mkdir: $(dirname $target_path)"
   mkdir -p "$(dirname $target_path)" # ensure the directory exists
   echo "Check file path is writable: $target_path"
@@ -28,7 +33,7 @@ function retrieve_file {
     echo "Error: path does not exist, var may not be a file: $target_path "
   fi
 
-  echo "Write file content with single operation"
+  echo "Write file content with single operation to $target_path"
   # file_content=$(echo "$response" | jq -r .'SecretString' | jq -r .'file' | base64 --decode)
   # echo "$file_content" >"$target_path"
   # Do not store binary data as a variable in bash (above), it will be corrupted.
