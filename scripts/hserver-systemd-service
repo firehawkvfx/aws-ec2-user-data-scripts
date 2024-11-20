@@ -13,18 +13,18 @@ function print_usage {
   echo
   echo "Options:"
   echo
-  echo -e "  --houdini-major-version\tThe major houdini version (20.0)"
+  echo -e "  --houdini-major-version\tThe major houdini version (20.5)"
   echo -e "  --service-user-name\tThe username the service will run as (deadlineuser)"
   echo -e "  --houdini-license-server-address\tThe url or IP address of your houdini license server (https://www.sidefx.com/license/sesinetd)"
   echo -e "  --install-service\tInstall a service to run on startup."
   echo
   echo "Example: Wait for payload in message queue."
   echo
-  echo "  hserver-systemd-service --houdini-major-version 20.0 --service-user-name deadlineuser --houdini-license-server-address https://www.sidefx.com/license/sesinetd"
+  echo "  hserver-systemd-service --houdini-major-version 20.5 --service-user-name deadlineuser --houdini-license-server-address https://www.sidefx.com/license/sesinetd"
   echo
   echo "Example: Install as a service to run on startup."
   echo
-  echo "  hserver-systemd-service --install-service --houdini-major-version 20.0 --service-user-name deadlineuser --houdini-license-server-address https://www.sidefx.com/license/sesinetd"
+  echo "  hserver-systemd-service --install-service --houdini-major-version 20.5 --service-user-name deadlineuser --houdini-license-server-address https://www.sidefx.com/license/sesinetd"
 }
 
 function log {
@@ -193,7 +193,7 @@ function install {
   if [[ "$script_mode" == "install_service" ]]; then
     install_service_systemd "$houdini_major_version" "$service_user_name" "$houdini_license_server_address"
   elif [[ "$script_mode" == "run_service" ]]; then
-    error_if_empty "Must specify the houdini major version. eg: 20.0" "$houdini_major_version"
+    error_if_empty "Must specify the houdini major version. eg: 20.5" "$houdini_major_version"
     error_if_empty "Must specify the username running the service. eg: deadlineuser" "$service_user_name"
     error_if_empty "Must specify the liense server. eg: https://www.sidefx.com/license/sesinetd" "$houdini_license_server_address"
     run_service "$houdini_major_version" "$service_user_name" "$houdini_license_server_address"
